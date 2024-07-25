@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://jbilidroyxw6"]
+
+[ext_resource type="Texture2D" uid="uid://i0xn7to6n288" path="res://Assets/RoughTreeDesert.png" id="1_47cr3"]
+[ext_resource type="PackedScene" uid="uid://drrsx2jk103dn" path="res://Scenes/Player/player.tscn" id="2_nman8"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_47cr3")
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("2_nman8")]
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="CharacterBody2D"]
+remote_path = NodePath("../../Camera2D")
