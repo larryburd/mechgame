@@ -2,26 +2,34 @@ extends CharacterBody2D
 
 class_name Player
 
-const RUN_SPEED: float = 200.0
+const RUN_SPEED: float = 350.0
+const TURN_SPEED: float = .05
 const MAX_FALL: float = 400.0
 const HURT_TIME: float = 0.3
-const JUMP_VELOCITY: float = -400.0
+
+var torso = null
+var legs = null
 
 enum PLAYER_STATE { IDLE, RUN, JUMP, FALL, HURT }
 
 var _state: PLAYER_STATE = PLAYER_STATE.IDLE
 
 func _ready():
-	pass
+	torso = $Torso
+	legs = $Legs
 	
 func _process(delta):
-	look_at(get_global_mouse_position())
-
-func _physics_process(delta):
-		
+	turn_torso()
 	get_input()
 	move_and_slide()
 	#calc_state()
+	
+
+func _physics_process(delta):
+	pass
+	
+func turn_torso():
+	torso.look_at(get_global_mouse_position())
 	
 func get_input() -> void:
 	velocity.x = 0
@@ -29,13 +37,26 @@ func get_input() -> void:
 	
 	if Input.is_action_pressed("move_left"):
 		velocity.x = -RUN_SPEED
+		legs.rotation = deg_to_rad(270)
 	elif Input.is_action_pressed("move_right"):
 		velocity.x = RUN_SPEED
-		
+		legs.rotation = deg_to_rad(90)
 	if Input.is_action_pressed("move_up"):
 		velocity.y = -RUN_SPEED
+		if Input.is_action_pressed("move_left"):
+			legs.rotation = deg_to_rad(315)
+		elif Input.is_action_pressed("move_right"):
+			legs.rotation = deg_to_rad(45)
+		else:
+			legs.rotation = 0
 	elif Input.is_action_pressed("move_down"):
 		velocity.y = RUN_SPEED
+		if Input.is_action_pressed("move_left"):
+			legs.rotation = deg_to_rad(225)
+		elif Input.is_action_pressed("move_right"):
+			legs.rotation = deg_to_rad(135)
+		else:
+			legs.rotation = deg_to_rad(180)
 
 		
 	# velocity.y = clampf(velocity.y, JUMP_VELOCITY, MAX_FALL)
