@@ -81,19 +81,19 @@ func get_input() -> void:
 			# Alternate firing from left and right cannons
 			if fireLeft:
 				# Aim the laser towards the mouse
-				temp.rotation = $Torso.rotation
+				
 				temp.global_position = $Torso.get_node("CannonLeft").get("global_position")
 				fireLeft = false
 				left_cooldown_timer = cooldown_timer
 				right_cooldown_timer = cooldown_timer
-			elif !fireLeft:
-				# Aim the laser towards the mouse
-				temp.rotation = $Torso.rotation
+			else:
 				temp.global_position = $Torso.get_node("CannonRight").get("global_position")
 				fireLeft = true
 				right_cooldown_timer = cooldown_timer
 				left_cooldown_timer = cooldown_timer
-				
+			
+			# Turn the laser to face the mouse/cursor
+			temp.rotation = get_local_mouse_position().angle() - deg_to_rad(90)
 			temp.set("area_direction", (get_global_mouse_position() - self.global_position).normalized())
 
 	

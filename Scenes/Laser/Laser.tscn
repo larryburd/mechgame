@@ -17,6 +17,7 @@ fill_from = Vector2(0.731651, 0.488532)
 fill_to = Vector2(0.974771, 0.488532)
 
 [node name="Laser" type="Area2D"]
+rotation = 1.5708
 script = ExtResource("1_041vs")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
