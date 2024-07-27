@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://drrsx2jk103dn"]
+[gd_scene load_steps=7 format=3 uid="uid://drrsx2jk103dn"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_be2nr"]
 [ext_resource type="Texture2D" uid="uid://uehcpcltqwsi" path="res://Assets/Rough Mech.png" id="1_vsr0e"]
 [ext_resource type="PackedScene" uid="uid://pp2d73jeiqdv" path="res://Scenes/Laser/Laser.tscn" id="2_uu0xg"]
 [ext_resource type="Texture2D" uid="uid://d3gkodmxt05fp" path="res://Assets/Rough Mech Torsor.png" id="3_dmuc3"]
+[ext_resource type="AudioStream" uid="uid://b4wv6swrrqe0" path="res://Assets/Sounds/Laser 003.wav" id="5_h7f32"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wi4o8"]
 size = Vector2(200, 201)
@@ -28,3 +29,7 @@ position = Vector2(95, 72)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_wi4o8")
+
+[node name="LaserSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_h7f32")
+volume_db = -5.0

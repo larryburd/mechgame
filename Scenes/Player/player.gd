@@ -5,6 +5,8 @@ const TURN_SPEED: float = .05
 const MAX_FALL: float = 400.0
 const HURT_TIME: float = 0.3
 
+@onready var laser_sound = $LaserSound
+
 @export var Bullet: PackedScene
 @export var fire_rate: float = 0.2
 @export var cooldown_timer: float
@@ -27,12 +29,13 @@ func _process(delta):
 	turn_torso()
 	get_input()
 	move_and_slide()
-	#calc_state()
 	
 
 func _physics_process(delta):
 	pass
 
+# TODO: this can be squashed to one cooldown
+# for the whole shoot sequence to check against
 func decrement_cooldown(delta):
 	if left_cooldown_timer > 0.0:
 		left_cooldown_timer -= (10 * delta)
@@ -54,6 +57,7 @@ func get_input() -> void:
 	elif Input.is_action_pressed("move_right"):
 		velocity.x = RUN_SPEED
 		legs.rotation = deg_to_rad(90)
+	
 	# Up and Down buttons	
 	if Input.is_action_pressed("move_up"):
 		velocity.y = -RUN_SPEED
@@ -72,12 +76,12 @@ func get_input() -> void:
 		else:
 			legs.rotation = deg_to_rad(180)
 	
+	# Shooting the laser
 	if Input.get_action_raw_strength("shoot"):
 		# Check if the weapons are cooled down
 		if left_cooldown_timer <= 0.0 or right_cooldown_timer <= 0.0:
 			var temp = Bullet.instantiate()
 			add_sibling(temp)
-			
 			# Alternate firing from left and right cannons
 			if fireLeft:
 				# Aim the laser towards the mouse
@@ -92,11 +96,10 @@ func get_input() -> void:
 				right_cooldown_timer = cooldown_timer
 				left_cooldown_timer = cooldown_timer
 			
+			laser_sound.play()
 			# Turn the laser to face the mouse/cursor
 			temp.rotation = get_local_mouse_position().angle() - deg_to_rad(90)
 			temp.set("area_direction", (get_global_mouse_position() - self.global_position).normalized())
-
-	
 
 #func _on_hit_box_area_entered(area):
 	#print("Player HitBox: ", area)

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bhcne8wtxjp8e"
+path="res://.godot/imported/80s Synth Rock Station Main.wav-5cf29372e68e51cf15211239475d454c.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/80s Synth Rock Station Main.wav"
+dest_files=["res://.godot/imported/80s Synth Rock Station Main.wav-5cf29372e68e51cf15211239475d454c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
