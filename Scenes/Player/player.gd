@@ -1,14 +1,18 @@
 extends CharacterBody2D
 
-class_name Player
-
 const RUN_SPEED: float = 350.0
 const TURN_SPEED: float = .05
 const MAX_FALL: float = 400.0
 const HURT_TIME: float = 0.3
 
-var torso = null
-var legs = null
+@export var Bullet: PackedScene
+@export var fire_rate: float = 0.2
+@export var cooldown_timer: float
+var left_cooldown_timer: float = 0.0
+var right_cooldown_timer: float = 0.0
+var fireLeft: bool = false
+var torso: Sprite2D = null
+var legs: Sprite2D = null
 
 enum PLAYER_STATE { IDLE, RUN, JUMP, FALL, HURT }
 
@@ -19,6 +23,7 @@ func _ready():
 	legs = $Legs
 	
 func _process(delta):
+	decrement_cooldown(delta)
 	turn_torso()
 	get_input()
 	move_and_slide()
@@ -27,6 +32,13 @@ func _process(delta):
 
 func _physics_process(delta):
 	pass
+
+func decrement_cooldown(delta):
+	if left_cooldown_timer > 0.0:
+		left_cooldown_timer -= (10 * delta)
+		
+	if right_cooldown_timer > 0.0:
+		right_cooldown_timer -= (10 * delta)
 	
 func turn_torso():
 	torso.look_at(get_global_mouse_position())
@@ -35,12 +47,14 @@ func get_input() -> void:
 	velocity.x = 0
 	velocity.y = 0
 	
+	# Left and Right Bullet
 	if Input.is_action_pressed("move_left"):
 		velocity.x = -RUN_SPEED
 		legs.rotation = deg_to_rad(270)
 	elif Input.is_action_pressed("move_right"):
 		velocity.x = RUN_SPEED
 		legs.rotation = deg_to_rad(90)
+	# Up and Down buttons	
 	if Input.is_action_pressed("move_up"):
 		velocity.y = -RUN_SPEED
 		if Input.is_action_pressed("move_left"):
@@ -57,48 +71,33 @@ func get_input() -> void:
 			legs.rotation = deg_to_rad(135)
 		else:
 			legs.rotation = deg_to_rad(180)
+	
+	if Input.get_action_raw_strength("shoot"):
+		# Check if the weapons are cooled down
+		if left_cooldown_timer <= 0.0 or right_cooldown_timer <= 0.0:
+			var temp = Bullet.instantiate()
+			add_sibling(temp)
+			
+			# Alternate firing from left and right cannons
+			if fireLeft:
+				# Aim the laser towards the mouse
+				temp.rotation = $Torso.rotation
+				temp.global_position = $Torso.get_node("CannonLeft").get("global_position")
+				fireLeft = false
+				left_cooldown_timer = cooldown_timer
+				right_cooldown_timer = cooldown_timer
+			elif !fireLeft:
+				# Aim the laser towards the mouse
+				temp.rotation = $Torso.rotation
+				temp.global_position = $Torso.get_node("CannonRight").get("global_position")
+				fireLeft = true
+				right_cooldown_timer = cooldown_timer
+				left_cooldown_timer = cooldown_timer
+				
+			temp.set("area_direction", (get_global_mouse_position() - self.global_position).normalized())
 
-		
-	# velocity.y = clampf(velocity.y, JUMP_VELOCITY, MAX_FALL)
 	
 
-#func calc_state() -> void:
-	#if _state == PLAYER_STATE.HURT:
-		#return
-		#
-	#if is_on_floor():
-		#if velocity.x == 0:
-			#set_state(PLAYER_STATE.IDLE)
-		#else:
-			#set_state(PLAYER_STATE.RUN)  
-	#else:
-		#if velocity.y > 0:
-			#set_state(PLAYER_STATE.FALL)
-		#else:
-			#set_state(PLAYER_STATE.JUMP)
-	
-
-#func set_state(new_state: PLAYER_STATE) -> void:
-	#if new_state == _state:
-		#return
-		#
-	#if _state == PLAYER_STATE.FALL:
-		#if new_state == PLAYER_STATE.IDLE or new_state == PLAYER_STATE.RUN:
-			#SoundManager.play_clip(sound_player, SoundManager.SOUND_LAND)
-	#
-	#_state = new_state
-	#
-	#match _state:
-		#PLAYER_STATE.IDLE:
-			#animation_player.play("idle")
-		#PLAYER_STATE.RUN:
-			#animation_player.play("run")
-		#PLAYER_STATE.JUMP:
-			#animation_player.play("jump")
-		#PLAYER_STATE.FALL:
-			#animation_player.play("fall")	
-#
-#
 #func _on_hit_box_area_entered(area):
 	#print("Player HitBox: ", area)
 

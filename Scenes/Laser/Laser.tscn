@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://pp2d73jeiqdv"]
+
+[ext_resource type="Script" path="res://Scenes/Laser/Laser.gd" id="1_041vs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vl67t"]
+size = Vector2(10, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cn151"]
+
+[sub_resource type="Gradient" id="Gradient_nr8vv"]
+offsets = PackedFloat32Array(0.233766, 0.37013, 0.38961, 0.652597)
+colors = PackedColorArray(0.733333, 0, 0, 1, 0, 0, 0, 1, 0.227438, 0, 0, 1, 0.733333, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tty8p"]
+gradient = SubResource("Gradient_nr8vv")
+fill_from = Vector2(0.731651, 0.488532)
+fill_to = Vector2(0.974771, 0.488532)
+
+[node name="Laser" type="Area2D"]
+script = ExtResource("1_041vs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vl67t")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+scale = Vector2(10, 30)
+mesh = SubResource("BoxMesh_cn151")
+texture = SubResource("GradientTexture2D_tty8p")
